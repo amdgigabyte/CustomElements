@@ -129,7 +129,7 @@ if (useNative) {
     // build a list of ancestral custom elements (for native base detection)
     // TODO(sjmiles): we used to need to store this, but current code only
     // uses it in 'resolveTagName': it should probably be inlined
-    definition.ancestry = ancestry(definition.extends);
+    definition.ancestry = ancestry(definition.extendee);
     // extensions of native specializations of HTMLElement require localName
     // to remain native, and use secondary 'is' specifier for extension type
     resolveTagName(definition);
@@ -170,7 +170,7 @@ if (useNative) {
   function ancestry(extnds) {
     var extendee = getRegisteredDefinition(extnds);
     if (extendee) {
-      return ancestry(extendee.extends).concat([extendee]);
+      return ancestry(extendee.extendee).concat([extendee]);
     }
     return [];
   }
@@ -178,7 +178,7 @@ if (useNative) {
   function resolveTagName(definition) {
     // if we are explicitly extending something, that thing is our
     // baseTag, unless it represents a custom component
-    var baseTag = definition.extends;
+    var baseTag = definition.extendee;
     // if our ancestry includes custom components, we only have a
     // baseTag if one of them does
     for (var i=0, a; (a=definition.ancestry[i]); i++) {
@@ -216,7 +216,7 @@ if (useNative) {
       }
     }
     // cache this in case of mixin
-    definition.native = nativePrototype;
+    definition.nativePrototype = nativePrototype;
   }
 
   // SECTION 4
@@ -260,7 +260,7 @@ if (useNative) {
       // where above we can re-acquire inPrototype via
       // getPrototypeOf(Element), we cannot do so when
       // we use mixin, so we install a magic reference
-      customMixin(element, definition.prototype, definition.native);
+      customMixin(element, definition.prototype, definition.nativePrototype);
       element.__proto__ = definition.prototype;
     }
   }
