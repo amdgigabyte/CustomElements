@@ -12,9 +12,7 @@ function bootstrap() {
   // one more pass before register is 'live'
   CustomElements.upgradeDocument(document);
   // choose async
-  var async = window.Platform && Platform.endOfMicrotask ? 
-    Platform.endOfMicrotask :
-    setTimeout;
+  var async = setTimeout;
   async(function() {
     // set internal 'ready' flag, now document.registerElement will trigger 
     // synchronous upgrades
